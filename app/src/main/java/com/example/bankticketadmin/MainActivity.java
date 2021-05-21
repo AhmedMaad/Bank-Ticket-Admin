@@ -77,28 +77,6 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    public void updateDataToAllUsers(View view) {
-        db
-                .collection("tickets")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<TicketModel> tickets =
-                                queryDocumentSnapshots.toObjects(TicketModel.class);
-                        for (int i = 0; i < tickets.size(); ++i) {
-                            if (tickets.get(i).getTurn() == 0) {
-                                deleteTicketById(queryDocumentSnapshots.getDocuments().get(i).getId());
-                                LinearLayout parent = findViewById(R.id.parent);
-                                Snackbar.make(parent, R.string.serve_customer
-                                        , BaseTransientBottomBar.LENGTH_LONG).show();
-                                break;
-                            }
-                        }
-                    }
-                });
-    }
-
     private void deleteTicketById(String id) {
         db
                 .collection("tickets")

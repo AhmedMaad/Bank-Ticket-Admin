@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Bank Ticket Admin</string>
     <string name="reset_ticket_number">reset Ticket Number \n \n(24 Hours)</string>
-    <string name="current_customer_is_done">Current customer is done</string>
     <string name="tickets_initialized">Tickets are initialized</string>
-    <string name="serve_customer">You can now serve another customer :)</string>
 </resources>
