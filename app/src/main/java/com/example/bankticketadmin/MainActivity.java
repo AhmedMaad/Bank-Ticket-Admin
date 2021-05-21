@@ -6,13 +6,18 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,10 +54,56 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        deleteAllTickets();
+                    }
+                });
+    }
+
+    private void deleteAllTickets() {
+        db
+                .collection("tickets")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<TicketModel> tickets =
+                                queryDocumentSnapshots.toObjects(TicketModel.class);
+                        for (int i = 0; i < tickets.size(); ++i) {
+                            deleteTicketById(queryDocumentSnapshots.getDocuments().get(i).getId());
+                        }
                         Toast.makeText(MainActivity.this, R.string.tickets_initialized
                                 , Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    public void updateDataToAllUsers(View view) {
+        db
+                .collection("tickets")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<TicketModel> tickets =
+                                queryDocumentSnapshots.toObjects(TicketModel.class);
+                        for (int i = 0; i < tickets.size(); ++i) {
+                            if (tickets.get(i).getTurn() == 0) {
+                                deleteTicketById(queryDocumentSnapshots.getDocuments().get(i).getId());
+                                LinearLayout parent = findViewById(R.id.parent);
+                                Snackbar.make(parent, R.string.serve_customer
+                                        , BaseTransientBottomBar.LENGTH_LONG).show();
+                                break;
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void deleteTicketById(String id) {
+        db
+                .collection("tickets")
+                .document(id)
+                .delete();
     }
 
 }
