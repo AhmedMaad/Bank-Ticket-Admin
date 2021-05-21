@@ -39,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
         initializeTickets();
     }
 
-    public void updateDataToAllUsers(View view) {
-    }
-
     private void initializeTickets() {
         Map<String, String> map = new HashMap<>();
         map.put("ticket", "000");
