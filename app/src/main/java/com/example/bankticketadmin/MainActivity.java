@@ -44,9 +44,11 @@ public class MainActivity extends AppCompatActivity {
         initializeTickets();
     }
 
-    private void initializeTickets() {
+    private void initializeTickets(){
         Map<String, String> map = new HashMap<>();
-        map.put("ticket", "000");
+        map.put("Helwan", "000");
+        map.put("Maadi", "000");
+        map.put("Dokki", "000");
         db
                 .collection("ticketNumber")
                 .document("ticketNumber")
@@ -54,14 +56,19 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        deleteAllTickets();
+                        deleteAllTickets("HelwanTickets");
+                        deleteAllTickets("MaadiTickets");
+                        deleteAllTickets("DokkiTickets");
+                        Toast.makeText(MainActivity.this, R.string.tickets_initialized
+                                , Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-    private void deleteAllTickets() {
+
+    private void deleteAllTickets(String collectionName) {
         db
-                .collection("tickets")
+                .collection(collectionName)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -69,19 +76,21 @@ public class MainActivity extends AppCompatActivity {
                         List<TicketModel> tickets =
                                 queryDocumentSnapshots.toObjects(TicketModel.class);
                         for (int i = 0; i < tickets.size(); ++i) {
-                            deleteTicketById(queryDocumentSnapshots.getDocuments().get(i).getId());
+                            deleteTicketById(queryDocumentSnapshots.getDocuments().get(i).getId()
+                            , collectionName);
                         }
-                        Toast.makeText(MainActivity.this, R.string.tickets_initialized
-                                , Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void deleteTicketById(String id) {
+
+
+    private void deleteTicketById(String id, String collectionName) {
         db
-                .collection("tickets")
+                .collection(collectionName)
                 .document(id)
                 .delete();
     }
+
 
 }
