@@ -46,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeTickets(){
         Map<String, String> map = new HashMap<>();
-        map.put("Helwan", "000");
-        map.put("Maadi", "000");
-        map.put("Dokki", "000");
+        map.put("HelwanTickets", "000");
+        map.put("MaadiTickets", "000");
+        map.put("DokkiTickets", "000");
         db
                 .collection("ticketNumber")
                 .document("ticketNumber")
